@@ -23,6 +23,11 @@ cd mba-ia-desafio-ingestao-busca
 2. **Instale as dependências Python**
 
 ```bash
+
+python3 -m venv venv
+
+source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
