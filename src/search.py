@@ -1,3 +1,12 @@
+from dotenv import load_dotenv
+from langchain_core.runnables import RunnableParallel, RunnableLambda
+
+from functions import check_variables, get_store
+from langchain_openai import OpenAIEmbeddings
+from langchain.prompts import PromptTemplate
+
+load_dotenv()
+
 PROMPT_TEMPLATE = """
 CONTEXTO:
 {contexto}
@@ -26,4 +35,25 @@ RESPONDA A "PERGUNTA DO USUÁRIO"
 """
 
 def search_prompt(question=None):
-    pass
+    check_variables()
+
+    print("PERGUNTA:" + question)
+
+    if not question:
+        raise RuntimeError(f"Missing required environment variable: {question}")
+
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+    store = get_store(embeddings)
+
+    results = store.similarity_search_with_score(question, k=3)
+
+    prompt = PromptTemplate(
+        input_variables = ["contexto", "pergunta"],
+        template = PROMPT_TEMPLATE
+    )
+
+    return RunnableParallel(
+        contexto=RunnableLambda(lambda _: results),
+        pergunta=RunnableLambda(lambda _: question)
+    ) | prompt
