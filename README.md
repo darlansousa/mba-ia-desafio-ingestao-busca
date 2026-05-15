@@ -8,6 +8,7 @@
 
 - Python 3.10+
 - Docker e Docker Compose
+- Arquivo .env com variáveis de ambiente preenchidas
 
 ---
 

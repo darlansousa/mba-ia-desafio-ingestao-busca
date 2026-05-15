@@ -1,3 +1,5 @@
+import os
+
 from dotenv import load_dotenv
 from langchain_core.runnables import RunnableParallel, RunnableLambda
 
@@ -42,7 +44,7 @@ def search_prompt(question=None):
     if not question:
         raise RuntimeError(f"Missing required environment variable: {question}")
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL"))
 
     store = get_store(embeddings)
 
